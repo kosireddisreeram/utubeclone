@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/4e68ce48c2.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <a href="#">
+          <i class="fa-brands fa-youtube" class="youtube-logo"  ></i>
+        </a>
+        <div class="search-bar">
+          <input id="search" type="search" placeholder="Search" aria-label="Search" />
+          <button type="submit" class="search-btn" onclick="searchVideos()">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </div>
+        <div class="menu-icons">
+          <a href="#">
+            <i class="fa-solid fa-upload"></i>
+        </a>
+          <a href="#">
+            <i class="fa-solid fa-grip-dots"></i>
+            <i class="fa-solid fa-grip-dots-vertical"></i>
+        </a>
+          <a href="#">
+            <i class="fa-solid fa-bell"></i>
+        </a>
+          <a href="#">
+            <img class="menu-channel-icon" src="http:///unsplash.it/36/36?gravity=center" alt="Your Channel" />
+          </a>
+        </div>
+      </header>
+      <div class="categories">
+        <section class="category-section">
+          <button class="category active">All</button>
+          <button class="category">Category 1</button>
+          <button class="category">Category 2</button>
+          <button class="category">Category 3</button>
+          <button class="category">Category 4</button>
+          <button class="category">Category 5</button>
+          <button class="category">Category 6</button>
+          <button class="category">Category 7</button>
+          <button class="category">Category 8</button>
+          <button class="category">Category 9</button>
+        </section>
+      </div>
+    
+      <div id="search_results"></div>
+
+</body>
+</html>
+<script>
+     const search_results_div=document.getElementById("search_results");
+const searchVideos = async()=>{
+try{
+
+    let inp= document.getElementById("search").value;
+
+    let res =await fetch(
+        `https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${inp}&key=AIzaSyBUldVpqvKciiisqvo-caDQa2ZqZltuJ1w&maxResults=20`
+        );
+        // we need to pass maxResults to know how many results we need to get 50 is the max limit on the limits
+let data =await res.json();
+// console.log("apidata",snippet.title)
+// console.log(snippet.thumbnails.high)
+// console.log("apidata",data);
+// let videos=data.items;
+// console.log(videos);
+// appendVideos(videos);
+appendVideos(data.items);
+// return videos;
+}
+catch(error){
+console.log(error)
+}
+
+};
+// searchVideos()
+const appendVideos= (data) => {
+  console.log('data:',data);
+    search_results_div.innerHTML=null;
+// data.forEach(({snippet:{title},id:{videoId}})=>{
+    
+  // data.forEach(({snippet:{title,thumbnails}})=>{
+    data.forEach(({snippet:{thumbnails,title},id:{videoId}})=>{
+      //  console.log('snippet:',thumbnails);
+      // data.forEach((item)=>{
+      //   // let {snippet}=item;
+      //   let {thumbnails,title}=item.snippet;
+      // console.log('data1:',thumbnails.high);
+
+
+let div=document.createElement('div');
+div.addEventListener("click",function(){
+  window.location.href=`https://www.youtube.com/embed/${videoId}`
+})
+let name =document.createElement('p');
+name.innerText=title;
+let img =document.createElement('img');
+img.src=thumbnails.high.url;
+
+// let iframe= document.createElement('iframe')
+// iframe.src=`https://www.youtube.com/embed/${videoId}`;
+// iframe.height="100%";
+// iframe.width="100%";
+// iframe.allow='fullscreen';
+// div.append(iframe,name);
+div.append(title,img);
+search_results_div.append(div);
+
+  })
+}
+function show(){
+
+}
+</script>
